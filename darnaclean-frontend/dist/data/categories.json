@@ -1,0 +1,209 @@
+[
+  {
+    "id": 1,
+    "name": {
+      "fr": "Produits de Nettoyage",
+      "ar": "منتجات التنظيف",
+      "en": "Cleaning Products"
+    },
+    "slug": "produits-nettoyage",
+    "description": {
+      "fr": "Découvrez notre gamme complète de produits de nettoyage pour tous types de surfaces",
+      "ar": "اكتشف مجموعتنا الكاملة من منتجات التنظيف لجميع أنواع الأسطح",
+      "en": "Discover our complete range of cleaning products for all types of surfaces"
+    },
+    "image": "/images/categories/cleaning-products.jpg",
+    "featured": true,
+    "subcategories": [
+      {
+        "id": 11,
+        "name": {
+          "fr": "Nettoyants Multi-surfaces",
+          "ar": "منظفات متعددة الأسطح",
+          "en": "Multi-surface Cleaners"
+        },
+        "slug": "nettoyants-multi-surfaces"
+      },
+      {
+        "id": 12,
+        "name": {
+          "fr": "Nettoyants Sol",
+          "ar": "منظفات الأرضيات",
+          "en": "Floor Cleaners"
+        },
+        "slug": "nettoyants-sol"
+      },
+      {
+        "id": 13,
+        "name": {
+          "fr": "Nettoyants Vitres",
+          "ar": "منظفات الزجاج",
+          "en": "Glass Cleaners"
+        },
+        "slug": "nettoyants-vitres"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": {
+      "fr": "Hygiène Personnelle",
+      "ar": "النظافة الشخصية",
+      "en": "Personal Hygiene"
+    },
+    "slug": "hygiene-personnelle",
+    "description": {
+      "fr": "Produits d'hygiène personnelle de qualité supérieure pour votre bien-être quotidien",
+      "ar": "منتجات النظافة الشخصية عالية الجودة لرفاهيتك اليومية",
+      "en": "Superior quality personal hygiene products for your daily well-being"
+    },
+    "image": "/images/categories/personal-hygiene.jpg",
+    "featured": true,
+    "subcategories": [
+      {
+        "id": 21,
+        "name": {
+          "fr": "Savons et Gels Douche",
+          "ar": "الصابون وجل الاستحمام",
+          "en": "Soaps and Shower Gels"
+        },
+        "slug": "savons-gels-douche"
+      },
+      {
+        "id": 22,
+        "name": {
+          "fr": "Shampoings",
+          "ar": "الشامبو",
+          "en": "Shampoos"
+        },
+        "slug": "shampoings"
+      },
+      {
+        "id": 23,
+        "name": {
+          "fr": "Déodorants",
+          "ar": "مزيلات العرق",
+          "en": "Deodorants"
+        },
+        "slug": "deodorants"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": {
+      "fr": "Lessive et Détergents",
+      "ar": "المنظفات والصابون",
+      "en": "Laundry & Detergents"
+    },
+    "slug": "lessive-detergents",
+    "description": {
+      "fr": "Gamme complète de lessives et détergents pour un linge impeccable",
+      "ar": "مجموعة كاملة من منظفات الغسيل للحصول على ملابس نظيفة",
+      "en": "Complete range of laundry and detergents for impeccable clothing"
+    },
+    "image": "/images/categories/laundry-detergents.jpg",
+    "featured": true,
+    "subcategories": [
+      {
+        "id": 31,
+        "name": {
+          "fr": "Lessive en Poudre",
+          "ar": "مسحوق الغسيل",
+          "en": "Powder Detergent"
+        },
+        "slug": "lessive-poudre"
+      },
+      {
+        "id": 32,
+        "name": {
+          "fr": "Lessive Liquide",
+          "ar": "منظف سائل",
+          "en": "Liquid Detergent"
+        },
+        "slug": "lessive-liquide"
+      },
+      {
+        "id": 33,
+        "name": {
+          "fr": "Adoucissants",
+          "ar": "منعمات الأقمشة",
+          "en": "Fabric Softeners"
+        },
+        "slug": "adoucissants"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": {
+      "fr": "Désinfectants",
+      "ar": "المطهرات",
+      "en": "Disinfectants"
+    },
+    "slug": "desinfectants",
+    "description": {
+      "fr": "Désinfectants puissants pour une protection optimale contre les germes",
+      "ar": "مطهرات قوية للحماية المثلى ضد الجراثيم",
+      "en": "Powerful disinfectants for optimal protection against germs"
+    },
+    "image": "/images/categories/disinfectants.jpg",
+    "featured": true,
+    "subcategories": [
+      {
+        "id": 41,
+        "name": {
+          "fr": "Désinfectant Surfaces",
+          "ar": "مطهر الأسطح",
+          "en": "Surface Disinfectant"
+        },
+        "slug": "desinfectant-surfaces"
+      },
+      {
+        "id": 42,
+        "name": {
+          "fr": "Gel Hydroalcoolique",
+          "ar": "جل كحولي",
+          "en": "Hand Sanitizer"
+        },
+        "slug": "gel-hydroalcoolique"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": {
+      "fr": "Équipements de Nettoyage",
+      "ar": "معدات التنظيف",
+      "en": "Cleaning Equipment"
+    },
+    "slug": "equipements-nettoyage",
+    "description": {
+      "fr": "Tous les équipements nécessaires pour un nettoyage efficace",
+      "ar": "جميع المعدات اللازمة للتنظيف الفعال",
+      "en": "All equipment needed for effective cleaning"
+    },
+    "image": "/images/categories/cleaning-equipment.jpg",
+    "featured": false,
+    "subcategories": [
+      {
+        "id": 51,
+        "name": {
+          "fr": "Serpillières et Balais",
+          "ar": "الممسحات والمكانس",
+          "en": "Mops and Brooms"
+        },
+        "slug": "serpillieres-balais"
+      },
+      {
+        "id": 52,
+        "name": {
+          "fr": "Éponges et Chiffons",
+          "ar": "الإسفنج والخرق",
+          "en": "Sponges and Cloths"
+        },
+        "slug": "eponges-chiffons"
+      }
+    ]
+  }
+]
