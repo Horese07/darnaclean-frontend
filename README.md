@@ -1,2 +1,0 @@
-# DarnaClean
-E-commerce website
