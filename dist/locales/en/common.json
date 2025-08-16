@@ -1,0 +1,113 @@
+{
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "categories": "Categories",
+    "about": "About",
+    "contact": "Contact",
+    "cart": "Cart",
+    "account": "My Account",
+    "admin": "Administration"
+  },
+  "hero": {
+    "title": "DarnaClean.ma",
+    "subtitle": "Your trusted partner for hygiene and cleaning in Morocco",
+    "description": "Discover our wide range of superior quality hygiene and cleaning products, delivered directly to your home.",
+    "cta": "Discover our products",
+    "features": {
+      "quality": "Quality products",
+      "delivery": "Fast delivery",
+      "support": "24/7 customer service"
+    }
+  },
+  "products": {
+    "title": "Our Products",
+    "filterBy": "Filter by",
+    "sortBy": "Sort by",
+    "priceRange": "Price range",
+    "brand": "Brand",
+    "category": "Category",
+    "inStock": "In stock",
+    "onSale": "On sale",
+    "featured": "Featured products",
+    "addToCart": "Add to cart",
+    "viewDetails": "View details",
+    "outOfStock": "Out of stock",
+    "reviews": "reviews",
+    "specifications": "Specifications",
+    "description": "Description"
+  },
+  "cart": {
+    "title": "My Cart",
+    "empty": "Your cart is empty",
+    "continueShopping": "Continue shopping",
+    "checkout": "Proceed to checkout",
+    "quantity": "Quantity",
+    "price": "Price",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "tax": "Tax",
+    "remove": "Remove"
+  },
+  "checkout": {
+    "title": "Complete your order",
+    "shippingInfo": "Shipping information",
+    "paymentMethod": "Payment method",
+    "orderSummary": "Order summary",
+    "placeOrder": "Place order",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "postalCode": "Postal code",
+    "paymentMethods": {
+      "card": "Credit card",
+      "paypal": "PayPal",
+      "cod": "Cash on delivery"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "searchPlaceholder": "Search products...",
+    "language": "Language",
+    "currency": "MAD",
+    "free": "Free",
+    "sale": "SALE",
+    "new": "NEW",
+    "bestseller": "BESTSELLER"
+  },
+  "footer": {
+    "about": "About DarnaClean",
+    "aboutText": "DarnaClean.ma is your trusted partner for all your hygiene and cleaning product needs in Morocco.",
+    "quickLinks": "Quick links",
+    "customerService": "Customer service",
+    "followUs": "Follow us",
+    "newsletter": "Newsletter",
+    "newsletterText": "Subscribe to receive our special offers",
+    "subscribe": "Subscribe",
+    "legal": "Legal notices",
+    "privacy": "Privacy policy",
+    "terms": "Terms of use",
+    "copyright": "© 2025 DarnaClean.ma. All rights reserved."
+  },
+  "account": {
+    "profile": "My profile",
+    "orders": "My orders",
+    "addresses": "My addresses",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register",
+    "forgotPassword": "Forgot password?"
+  }
+}
