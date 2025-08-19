@@ -89,8 +89,11 @@ export function CartPage() {
         <div className="lg:col-span-2 space-y-4">
           {state.cart.map((item) => {
             const product = item.product;
-            const productName = product.name[i18n.language] || product.name.fr;
-            
+const productName = product.name
+  ? typeof product.name === 'string'
+    ? product.name
+    : (product.name as { [lang: string]: string })[i18n.language] || (product.name as { [lang: string]: string }).fr || (product.name as { [lang: string]: string }).en || 'Unnamed Product'
+  : 'Unnamed Product';       
             return (
               <Card key={product.id} className="overflow-hidden">
                 <CardContent className="p-6">
