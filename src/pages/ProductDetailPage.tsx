@@ -53,9 +53,12 @@ export function ProductDetailPage() {
     );
   }
 
-  const productName = product.name[i18n.language] || product.name.fr;
-  const productDescription = product.description[i18n.language] || product.description.fr;
+  const productName = product.name && typeof product.name === 'object'
+    ? (product.name[i18n.language] || product.name['fr'] || Object.values(product.name)[0])
+    : product.name || t('products.unnamedProduct');
+  const productDescription = product.description[i18n.language] || product.description;
   
+
   const handleAddToCart = async () => {
     if (product.stock <= 0) {
       toast.error(t('products.outOfStock'));
@@ -123,7 +126,8 @@ export function ProductDetailPage() {
                   {discountPercentage > 0 ? `-${discountPercentage}%` : 'PROMO'}
                 </Badge>
               )}
-              {product.badges.map((badge, index) => (
+              // Ensure badges are checked before mapping
+              {product.badges && product.badges.map((badge, index) => (
                 <Badge key={index} variant="secondary">
                   {badge}
                 </Badge>

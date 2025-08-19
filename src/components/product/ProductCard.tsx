@@ -22,13 +22,17 @@ interface ProductCardProps {
   className?: string;
 }
 
+// Ensure hooks are called at the top level
 export function ProductCard({ product, className = '' }: ProductCardProps) {
-  // Debug: Log product object to inspect its structure
-  console.log('ProductCard product:', product);
   const { t, i18n } = useTranslation();
-  const { addToCart } = useApp();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+const { addToCart } = useApp();
+const [isLoading, setIsLoading] = useState(false);
+const [isWishlisted, setIsWishlisted] = useState(false);
+
+// Remove duplicate function declaration since it's already declared above
+  if (!product) {
+    return <div className="text-red-500">Product data is unavailable.</div>;
+  }
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -97,12 +101,12 @@ export function ProductCard({ product, className = '' }: ProductCardProps) {
                   {discountPercentage > 0 ? `-${discountPercentage}%` : t('common.sale')}
                 </Badge>
               )}
-              {product.badges.map((badge, index) => (
+              {product.badges && product.badges.map((badge, index) => (
                 <Badge key={index} variant="secondary" className="shadow-lg">
                   {badge}
                 </Badge>
               ))}
-              {product.stock <= 5 && product.stock > 0 && (
+              {product.stock <= 10 && product.stock > 0 && (
                 <Badge variant="destructive" className="shadow-lg">
                   <AlertCircle className="w-3 h-3 mr-1" />
                   Stock faible
@@ -222,4 +226,5 @@ export function ProductCard({ product, className = '' }: ProductCardProps) {
       </Card>
     </Link>
   );
-}
+
+} // End of ProductCard component
