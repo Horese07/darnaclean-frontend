@@ -517,11 +517,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     // Apply filters
     if (state.filters.category) {
-      filtered = filtered.filter(product => product.category === state.filters.category);
+      filtered = filtered.filter(product => product.category?.slug === state.filters.category);
     }
 
     if (state.filters.subcategory) {
-      filtered = filtered.filter(product => product.subcategory === state.filters.subcategory);
+      filtered = filtered.filter(product => product.subcategory?.slug === state.filters.subcategory);
     }
 
     if (state.filters.brand) {

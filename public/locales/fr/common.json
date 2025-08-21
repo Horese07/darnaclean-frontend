@@ -133,5 +133,197 @@
     "login": "Se connecter",
     "register": "S'inscrire",
     "forgotPassword": "Mot de passe oublié ?"
+  },
+  "auth": {
+    "welcomeBack": "Bon retour",
+    "enterCredentials": "Entrez vos identifiants pour accéder à votre compte",
+    "email": "Email",
+    "emailPlaceholder": "Entrez votre email",
+    "password": "Mot de passe",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "signIn": "Se connecter",
+    "signingIn": "Connexion en cours...",
+    "signUp": "S'inscrire",
+    "dontHaveAccount": "Vous n'avez pas de compte ?",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "invalidCredentials": "Email ou mot de passe invalide",
+    "loginError": "Une erreur s'est produite lors de la connexion",
+    "googleLogin": "Continuer avec Google",
+    "facebookLogin": "Continuer avec Facebook",
+    "appleLogin": "Continuer avec Apple",
+    "orContinueWith": "Ou continuer avec",
+    "googleLoginError": "La connexion Google a échoué",
+    "facebookLoginError": "La connexion Facebook a échoué",
+    "appleLoginError": "La connexion Apple a échoué",
+    "socialLoginError": "Une erreur s'est produite lors de la connexion {provider}",
+    "createAccount": "Créer un compte",
+    "enterInfo": "Entrez vos informations pour créer un nouveau compte",
+    "firstName": "Prénom",
+    "firstNamePlaceholder": "Prénom",
+    "lastName": "Nom",
+    "lastNamePlaceholder": "Nom",
+    "phone": "Téléphone",
+    "phonePlaceholder": "Numéro de téléphone",
+    "password": "Mot de passe",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "confirmPasswordPlaceholder": "Confirmez votre mot de passe",
+    "dateOfBirth": "Date de naissance",
+    "gender": "Genre",
+    "genderPlaceholder": "Sélectionner le genre",
+    "male": "Homme",
+    "female": "Femme",
+    "other": "Autre",
+    "preferredLanguage": "Langue préférée",
+    "english": "Anglais",
+    "french": "Français",
+    "arabic": "Arabe",
+    "register": "Créer le compte",
+    "registering": "Création du compte...",
+    "passwordsDontMatch": "Les mots de passe ne correspondent pas",
+    "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+    "registrationFailed": "L'inscription a échoué. Veuillez réessayer.",
+    "registrationError": "Une erreur s'est produite lors de l'inscription",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "signIn": "Se connecter"
+  },
+  "about": {
+    "hero": {
+      "badge": "#1 au Maroc pour l'hygiène",
+      "title": "À Propos de DarnaClean",
+      "subtitle": "Votre partenaire de confiance pour tous vos besoins en produits d'hygiène et de nettoyage depuis 2014. Nous nous engageons à fournir des produits de qualité supérieure et un service client exceptionnel.",
+      "discoverProducts": "Découvrir nos produits",
+      "contactUs": "Nous contacter"
+    },
+    "stats": {
+      "satisfiedCustomers": "Clients satisfaits",
+      "deliveryZone": "Zone de livraison",
+      "satisfactionRate": "Taux de satisfaction",
+      "expressDelivery": "Livraison express"
+    },
+    "mission": {
+      "title": "Notre Mission",
+      "description1": "Chez DarnaClean, notre mission est de contribuer à un Maroc plus propre et plus sain en fournissant des produits d'hygiène et de nettoyage de qualité supérieure, accessibles à tous les foyers et entreprises.",
+      "description2": "Nous nous engageons à promouvoir des pratiques d'hygiène responsables et durables, tout en soutenant l'économie locale et en créant des emplois de qualité."
+    },
+    "vision": {
+      "title": "Notre Vision",
+      "description1": "Devenir la référence incontournable en matière d'hygiène et de propreté au Maroc, en innovant constamment et en adaptant nos solutions aux besoins évolutifs de nos clients.",
+      "description2": "Nous aspirons à être reconnus comme un partenaire de confiance qui contribue activement au bien-être et à la santé de la population marocaine."
+    },
+    "values": {
+      "title": "Nos Valeurs",
+      "subtitle": "Ces valeurs fondamentales guident chacune de nos décisions et actions au quotidien",
+      "premiumQuality": {
+        "title": "Qualité Premium",
+        "description": "Produits certifiés et de marques reconnues internationalement"
+      },
+      "customerService": {
+        "title": "Service Client",
+        "description": "Support client réactif et professionnel disponible 7j/7"
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "Technologies de pointe pour un nettoyage efficace et écologique"
+      },
+      "reliability": {
+        "title": "Fiabilité",
+        "description": "Plus de 10 ans d'expérience dans le secteur de l'hygiène"
+      }
+    },
+    "team": {
+      "title": "Notre Équipe",
+      "subtitle": "Une équipe passionnée et expérimentée qui travaille chaque jour pour votre satisfaction"
+    },
+    "history": {
+      "title": "Notre Histoire",
+      "subtitle": "Un parcours marqué par la croissance, l'innovation et l'engagement envers nos clients"
+    },
+    "cta": {
+      "title": "Prêt à nous rejoindre ?",
+      "subtitle": "Découvrez notre gamme complète de produits d'hygiène et de nettoyage, et laissez-nous vous accompagner dans votre quête de propreté et de bien-être.",
+      "viewProducts": "Voir nos produits",
+      "contactUs": "Nous contacter"
+    },
+    "footer": {
+      "description": "Votre partenaire de confiance pour tous vos besoins en produits d'hygiène et de nettoyage.",
+      "services": "Services",
+      "hygieneProducts": "Produits d'hygiène",
+      "cleaningProducts": "Produits de nettoyage",
+      "homeDelivery": "Livraison à domicile",
+      "customerSupport": "Support client 24/7",
+      "expertAdvice": "Conseils d'experts",
+      "information": "Informations",
+      "aboutUs": "À propos de nous",
+      "ourValues": "Nos valeurs",
+      "careers": "Carrières",
+      "privacyPolicy": "Politique de confidentialité",
+      "termsOfUse": "Conditions d'utilisation",
+      "copyright": "© 2024 DarnaClean. Tous droits réservés. | Conçu avec ❤️ au Maroc"
+    }
+  },
+  "contact": {
+    "hero": {
+      "badge": "Contactez-nous",
+      "title": "Parlons de vos besoins",
+      "subtitle": "Notre équipe est là pour vous aider et répondre à toutes vos questions. N'hésitez pas à nous contacter, nous vous répondrons dans les plus brefs délais."
+    },
+    "contactInfo": {
+      "title": "Informations de Contact",
+      "subtitle": "Plusieurs façons de nous joindre pour répondre à vos besoins",
+      "address": "Adresse",
+      "phone": "Téléphone",
+      "email": "Email",
+      "hours": "Horaires"
+    },
+    "form": {
+      "title": "Envoyez-nous un message",
+      "subtitle": "Remplissez le formulaire ci-dessous et nous vous répondrons rapidement",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "subject": "Sujet",
+      "message": "Message",
+      "messagePlaceholder": "Décrivez votre demande en détail...",
+      "newsletter": "Je souhaite recevoir la newsletter DarnaClean",
+      "terms": "J'accepte les conditions d'utilisation et la politique de confidentialité",
+      "sendMessage": "Envoyer le message",
+      "sending": "Envoi en cours...",
+      "success": "Message envoyé avec succès ! Nous vous répondrons bientôt.",
+      "error": "Erreur lors de l'envoi. Veuillez vérifier vos informations."
+    },
+    "subjects": {
+      "infoRequest": "Demande d'information",
+      "support": "Support technique",
+      "complaint": "Réclamation",
+      "partnership": "Partenariat commercial",
+      "recruitment": "Recrutement",
+      "other": "Autre"
+    },
+    "map": {
+      "title": "Notre Localisation",
+      "subtitle": "Trouvez-nous facilement au cœur de Casablanca",
+      "interactiveMap": "Carte interactive",
+      "address": "123 Boulevard Mohammed V, Casablanca"
+    },
+    "social": {
+      "title": "Suivez-nous",
+      "subtitle": "Restez connectés avec DarnaClean sur les réseaux sociaux"
+    },
+    "faq": {
+      "title": "Questions Fréquentes",
+      "subtitle": "Trouvez rapidement des réponses à vos questions",
+      "howToOrder": "Comment passer une commande ?",
+      "deliveryTime": "Quels sont les délais de livraison ?",
+      "howToReturn": "Comment retourner un produit ?",
+      "paymentMethods": "Quels sont les moyens de paiement acceptés ?"
+    },
+    "cta": {
+      "title": "Besoin d'aide immédiate ?",
+      "subtitle": "Notre équipe de support client est disponible 7j/7 pour vous accompagner et répondre à toutes vos questions.",
+      "callUs": "Appelez-nous",
+      "sendEmail": "Envoyez un email"
+    }
   }
 }

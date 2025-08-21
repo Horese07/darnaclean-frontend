@@ -38,7 +38,7 @@ const [isWishlisted, setIsWishlisted] = useState(false);
     e.preventDefault();
     e.stopPropagation();
     
-    if (product.stock <= 0) {
+    if ((product.stock || 0) <= 0) {
       toast.error(t('products.outOfStock'));
       return;
     }
@@ -47,7 +47,7 @@ const [isWishlisted, setIsWishlisted] = useState(false);
     
     try {
       addToCart(product, 1);
-      toast.success(`${product.name || t('products.unnamedProduct')} ajouté au panier !`);
+      toast.success(`${product.name[i18n.language] || product.name.fr || t('products.unnamedProduct')} ajouté au panier !`);
     } catch (error) {
       toast.error('Erreur lors de l\'ajout au panier');
     } finally {
@@ -63,7 +63,7 @@ const [isWishlisted, setIsWishlisted] = useState(false);
   };
 
   const discountPercentage = product.originalPrice 
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    ? Math.round(((Number(product.originalPrice) - Number(product.price)) / Number(product.originalPrice)) * 100)
     : 0;
 
   return (
@@ -75,7 +75,7 @@ const [isWishlisted, setIsWishlisted] = useState(false);
             {product.images && product.images.length > 0 ? (
               <img
                 src={product.images[0]}
-                alt={typeof product.name === 'string' ? product.name : t('products.unnamedProduct')}
+                alt={product.name[i18n.language] || product.name.fr || t('products.unnamedProduct')}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 onError={(e) => {
                   e.currentTarget.src = `data:image/svg+xml,${encodeURIComponent(`
@@ -152,7 +152,7 @@ const [isWishlisted, setIsWishlisted] = useState(false);
 
               {/* Product name */}
               <h3 className="font-semibold text-gray-900 line-clamp-2 group-hover:text-emerald-600 transition-colors">
-                {typeof product.name === 'string' ? product.name : t('products.unnamedProduct')}
+                {product.name[i18n.language] || product.name.fr || t('products.unnamedProduct')}
               </h3>
 
               {/* Rating */}
@@ -162,7 +162,7 @@ const [isWishlisted, setIsWishlisted] = useState(false);
                     <Star
                       key={i}
                       className={`w-4 h-4 ${
-                        i < Math.floor(product.rating)
+                        i < Math.floor(Number(product.rating) || 0)
                           ? 'fill-yellow-400 text-yellow-400'
                           : 'text-gray-300'
                       }`}
@@ -170,7 +170,7 @@ const [isWishlisted, setIsWishlisted] = useState(false);
                   ))}
                 </div>
                 <span className="text-sm text-gray-600">
-                  ({product.reviewCount} {t('products.reviews')})
+                  ({(product.reviewCount || 0)} {t('products.reviews')})
                 </span>
               </div>
 
@@ -179,21 +179,21 @@ const [isWishlisted, setIsWishlisted] = useState(false);
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
                     <span className="text-lg font-bold text-gray-900">
-                      {product.price.toFixed(2)} {product.currency || t('common.currency')}
+                      {Number(product.price).toFixed(2)} {product.currency || t('common.currency')}
                     </span>
                     {product.originalPrice && (
                       <span className="text-sm text-gray-500 line-through">
-                        {product.originalPrice.toFixed(2)} {product.currency || t('common.currency')}
+                        {Number(product.originalPrice).toFixed(2)} {product.currency || t('common.currency')}
                       </span>
                     )}
                   </div>
                   
                   {/* Stock status */}
                   <div className="text-xs text-gray-500">
-                    {product.stock > 10 ? (
+                    {(product.stock || 0) > 10 ? (
                       <span className="text-green-600">En stock</span>
-                    ) : product.stock > 0 ? (
-                      <span className="text-orange-600">Stock limité ({product.stock})</span>
+                    ) : (product.stock || 0) > 0 ? (
+                      <span className="text-orange-600">Stock limité ({(product.stock || 0)})</span>
                     ) : (
                       <span className="text-red-600">{t('products.outOfStock')}</span>
                     )}
@@ -204,7 +204,7 @@ const [isWishlisted, setIsWishlisted] = useState(false);
               {/* Add to cart button */}
               <Button
                 onClick={handleAddToCart}
-                disabled={isLoading || product.stock <= 0}
+                disabled={isLoading || (product.stock || 0) <= 0}
                 className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50"
                 size="sm"
               >

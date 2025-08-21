@@ -133,5 +133,197 @@
     "login": "Login",
     "register": "Register",
     "forgotPassword": "Forgot password?"
+  },
+  "auth": {
+    "welcomeBack": "Welcome back",
+    "enterCredentials": "Enter your credentials to access your account",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "signUp": "Sign up",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "invalidCredentials": "Invalid email or password",
+    "loginError": "An error occurred during login",
+    "googleLogin": "Continue with Google",
+    "facebookLogin": "Continue with Facebook",
+    "appleLogin": "Continue with Apple",
+    "orContinueWith": "Or continue with",
+    "googleLoginError": "Google login failed",
+    "facebookLoginError": "Facebook login failed",
+    "appleLoginError": "Apple login failed",
+    "socialLoginError": "An error occurred during {provider} login",
+    "createAccount": "Create account",
+    "enterInfo": "Enter your information to create a new account",
+    "firstName": "First Name",
+    "firstNamePlaceholder": "First name",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Last name",
+    "phone": "Phone",
+    "phonePlaceholder": "Phone number",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "dateOfBirth": "Date of Birth",
+    "gender": "Gender",
+    "genderPlaceholder": "Select gender",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "preferredLanguage": "Preferred Language",
+    "english": "English",
+    "french": "French",
+    "arabic": "Arabic",
+    "register": "Create Account",
+    "registering": "Creating account...",
+    "passwordsDontMatch": "Passwords do not match",
+    "passwordTooShort": "Password must be at least 8 characters long",
+    "registrationFailed": "Registration failed. Please try again.",
+    "registrationError": "An error occurred during registration",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in"
+  },
+  "about": {
+    "hero": {
+      "badge": "#1 in Morocco for hygiene",
+      "title": "About DarnaClean",
+      "subtitle": "Your trusted partner for all your hygiene and cleaning product needs since 2014. We are committed to providing superior quality products and exceptional customer service.",
+      "discoverProducts": "Discover our products",
+      "contactUs": "Contact us"
+    },
+    "stats": {
+      "satisfiedCustomers": "Satisfied customers",
+      "deliveryZone": "Delivery zone",
+      "satisfactionRate": "Satisfaction rate",
+      "expressDelivery": "Express delivery"
+    },
+    "mission": {
+      "title": "Our Mission",
+      "description1": "At DarnaClean, our mission is to contribute to a cleaner and healthier Morocco by providing superior quality hygiene and cleaning products, accessible to all households and businesses.",
+      "description2": "We are committed to promoting responsible and sustainable hygiene practices, while supporting the local economy and creating quality jobs."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "description1": "To become the undisputed reference in hygiene and cleanliness in Morocco, constantly innovating and adapting our solutions to the evolving needs of our customers.",
+      "description2": "We aspire to be recognized as a trusted partner who actively contributes to the well-being and health of the Moroccan population."
+    },
+    "values": {
+      "title": "Our Values",
+      "subtitle": "These fundamental values guide each of our decisions and actions on a daily basis",
+      "premiumQuality": {
+        "title": "Premium Quality",
+        "description": "Certified products and internationally recognized brands"
+      },
+      "customerService": {
+        "title": "Customer Service",
+        "description": "Responsive and professional customer support available 7 days a week"
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "Cutting-edge technologies for effective and ecological cleaning"
+      },
+      "reliability": {
+        "title": "Reliability",
+        "description": "Over 10 years of experience in the hygiene sector"
+      }
+    },
+    "team": {
+      "title": "Our Team",
+      "subtitle": "A passionate and experienced team that works every day for your satisfaction"
+    },
+    "history": {
+      "title": "Our History",
+      "subtitle": "A journey marked by growth, innovation and commitment to our customers"
+    },
+    "cta": {
+      "title": "Ready to join us?",
+      "subtitle": "Discover our complete range of hygiene and cleaning products, and let us accompany you in your quest for cleanliness and well-being.",
+      "viewProducts": "View our products",
+      "contactUs": "Contact us"
+    },
+    "footer": {
+      "description": "Your trusted partner for all your hygiene and cleaning product needs.",
+      "services": "Services",
+      "hygieneProducts": "Hygiene products",
+      "cleaningProducts": "Cleaning products",
+      "homeDelivery": "Home delivery",
+      "customerSupport": "24/7 customer support",
+      "expertAdvice": "Expert advice",
+      "information": "Information",
+      "aboutUs": "About us",
+      "ourValues": "Our values",
+      "careers": "Careers",
+      "privacyPolicy": "Privacy policy",
+      "termsOfUse": "Terms of use",
+      "copyright": "© 2024 DarnaClean. All rights reserved. | Designed with ❤️ in Morocco"
+    }
+  },
+  "contact": {
+    "hero": {
+      "badge": "Contact us",
+      "title": "Let's talk about your needs",
+      "subtitle": "Our team is here to help you and answer all your questions. Don't hesitate to contact us, we will get back to you as soon as possible."
+    },
+    "contactInfo": {
+      "title": "Contact Information",
+      "subtitle": "Several ways to reach us to meet your needs",
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "hours": "Hours"
+    },
+    "form": {
+      "title": "Send us a message",
+      "subtitle": "Fill out the form below and we will get back to you quickly",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "phone": "Phone",
+      "subject": "Subject",
+      "message": "Message",
+      "messagePlaceholder": "Describe your request in detail...",
+      "newsletter": "I want to receive the DarnaClean newsletter",
+      "terms": "I accept the terms of use and privacy policy",
+      "sendMessage": "Send message",
+      "sending": "Sending...",
+      "success": "Message sent successfully! We will get back to you soon.",
+      "error": "Error sending. Please check your information."
+    },
+    "subjects": {
+      "infoRequest": "Information request",
+      "support": "Technical support",
+      "complaint": "Complaint",
+      "partnership": "Business partnership",
+      "recruitment": "Recruitment",
+      "other": "Other"
+    },
+    "map": {
+      "title": "Our Location",
+      "subtitle": "Find us easily in the heart of Casablanca",
+      "interactiveMap": "Interactive map",
+      "address": "123 Boulevard Mohammed V, Casablanca"
+    },
+    "social": {
+      "title": "Follow us",
+      "subtitle": "Stay connected with DarnaClean on social media"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Find quick answers to your questions",
+      "howToOrder": "How to place an order?",
+      "deliveryTime": "What are the delivery times?",
+      "howToReturn": "How to return a product?",
+      "paymentMethods": "What payment methods are accepted?"
+    },
+    "cta": {
+      "title": "Need immediate help?",
+      "subtitle": "Our customer support team is available 7 days a week to assist you and answer all your questions.",
+      "callUs": "Call us",
+      "sendEmail": "Send email"
+    }
   }
 }

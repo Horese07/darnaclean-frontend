@@ -56,6 +56,8 @@ export function ProductsPage() {
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
   const [showOnSale, setShowOnSale] = useState(false);
   const [showInStock, setShowInStock] = useState(true);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
 
   // Collapsible states
   const [isPriceOpen, setIsPriceOpen] = useState(true);
@@ -85,6 +87,53 @@ export function ProductsPage() {
 
   // Get subcategories for current category
   const subcategories = currentCategory ? currentCategory.subcategories : [];
+
+  // Load products for current category
+  useEffect(() => {
+    const loadCategoryProducts = async () => {
+      if (!categorySlug) {
+        setFilteredProducts(productsArray);
+        return;
+      }
+
+      setIsLoadingProducts(true);
+      try {
+        const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+        const response = await fetch(`${apiBase}/products?category=${categorySlug}`);
+        if (response.ok) {
+          const data = await response.json();
+          const products = data.data?.products || data.products || [];
+          setFilteredProducts(products);
+        } else {
+          setFilteredProducts([]);
+        }
+      } catch (error) {
+        console.error('Error loading category products:', error);
+        setFilteredProducts([]);
+      } finally {
+        setIsLoadingProducts(false);
+      }
+    };
+
+    loadCategoryProducts();
+  }, [categorySlug, productsArray]);
+
+  // Gérer les paramètres de recherche depuis l'URL
+  useEffect(() => {
+    const searchFromUrl = searchParams.get('search');
+    if (searchFromUrl && searchFromUrl !== searchQuery) {
+      setSearchQuery(searchFromUrl);
+    }
+  }, [searchParams, searchQuery]);
+
+  // Mettre à jour l'URL quand la recherche change
+  useEffect(() => {
+    if (searchQuery) {
+      setSearchParams({ search: searchQuery });
+    } else {
+      setSearchParams({});
+    }
+  }, [searchQuery, setSearchParams]);
 
   // Apply filters
   useEffect(() => {
@@ -116,15 +165,23 @@ export function ProductsPage() {
   }, [categorySlug, selectedSubcategories, selectedBrands, showOnSale, showInStock, priceRange, dispatch]);
 
   // Search functionality
-  const searchedProducts = getFilteredProducts().filter(product => {
+  const searchedProducts = filteredProducts.filter(product => {
     if (!searchQuery) return true;
     
     const query = searchQuery.toLowerCase();
-    const name = (product.name[i18n.language] || product.name.fr).toLowerCase();
-    const brand = product.brand.toLowerCase();
-    const tags = product.tags.join(' ').toLowerCase();
+    const name = (product.name[i18n.language] || product.name.fr || '').toLowerCase();
+    const description = (product.description[i18n.language] || product.description.fr || '').toLowerCase();
+    const brand = (product.brand || '').toLowerCase();
+    const category = (product.category?.name[i18n.language] || product.category?.name.fr || '').toLowerCase();
+    const subcategory = (product.subcategory?.name[i18n.language] || product.subcategory?.name.fr || '').toLowerCase();
+    const tags = (product.tags || []).join(' ').toLowerCase();
     
-    return name.includes(query) || brand.includes(query) || tags.includes(query);
+    return name.includes(query) || 
+           description.includes(query) || 
+           brand.includes(query) || 
+           category.includes(query) || 
+           subcategory.includes(query) || 
+           tags.includes(query);
   });
 
   // Correction : s'assurer que searchedProducts est toujours un tableau
@@ -425,12 +482,24 @@ export function ProductsPage() {
           {/* Results count */}
           <div className="flex items-center justify-between mb-6">
             <p className="text-gray-600">
-              {searchedProducts.length} produit{searchedProducts.length !== 1 ? 's' : ''} trouvé{searchedProducts.length !== 1 ? 's' : ''}
+              {isLoadingProducts ? (
+                'Chargement des produits...'
+              ) : (
+                `${searchedProducts.length} produit${searchedProducts.length !== 1 ? 's' : ''} trouvé${searchedProducts.length !== 1 ? 's' : ''}`
+              )}
             </p>
           </div>
 
+          {/* Loading state */}
+          {isLoadingProducts && (
+            <div className="text-center py-16">
+              <div className="w-16 h-16 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-gray-600">Chargement des produits de la catégorie...</p>
+            </div>
+          )}
+
           {/* Products grid */}
-          {safeSearchedProducts.length > 0 ? (
+          {!isLoadingProducts && safeSearchedProducts.length > 0 ? (
             <div className={`grid gap-6 ${
               viewMode === 'grid' 
                 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
@@ -444,18 +513,23 @@ export function ProductsPage() {
                 />
               ))}
             </div>
-          ) : (
+          ) : !isLoadingProducts && (
             <div className="text-center py-16">
               <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Aucun produit trouvé
+                {categorySlug ? 'Aucun produit dans cette catégorie' : 'Aucun produit trouvé'}
               </h3>
               <p className="text-gray-600 mb-6">
-                Essayez de modifier vos filtres ou votre recherche
+                {categorySlug 
+                  ? 'Cette catégorie ne contient pas encore de produits'
+                  : 'Essayez de modifier vos filtres ou votre recherche'
+                }
               </p>
-              <Button onClick={clearFilters} variant="outline">
-                Effacer tous les filtres
-              </Button>
+              {!categorySlug && (
+                <Button onClick={clearFilters} variant="outline">
+                  Effacer tous les filtres
+                </Button>
+              )}
             </div>
           )}
         </div>
