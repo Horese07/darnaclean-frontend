@@ -3,33 +3,33 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '@/contexts/useApp';
 import { useAuth } from '@/contexts/AuthContext';
-import { useCart } from '@/hooks/useCart';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 import { MapPin, Phone, Mail, Search, ShoppingCart, User, Globe, Menu, LogOut, Settings, Shield } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export function Header() {
   const [showCompact, setShowCompact] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const { t, i18n } = useTranslation();
-  const { state } = useApp();
+  const { state, getCartItemsCount } = useApp();
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
-  const { getItemCount } = useCart();
   const [cartItemCount, setCartItemCount] = useState(0);
 
   // Mettre à jour le nombre d'articles du panier avec animation
   useEffect(() => {
-    const currentCount = getItemCount();
+    const currentCount = getCartItemsCount();
+    console.log('Header: Cart count updated:', currentCount, 'Previous:', cartItemCount);
     if (currentCount !== cartItemCount) {
       // Si on ajoute des articles (count augmente), on anime
       if (currentCount > cartItemCount) {
@@ -37,7 +37,7 @@ export function Header() {
       }
       setCartItemCount(currentCount);
     }
-  }, [getItemCount, cartItemCount]);
+  }, [getCartItemsCount, cartItemCount, state.cart]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,9 +81,25 @@ export function Header() {
   const filteredProducts = searchQuery.trim() 
     ? (state.products || []).filter(product => {
         const query = searchQuery.toLowerCase();
-        const name = (product.name[i18n.language] || product.name.fr || '').toLowerCase();
-        const description = (product.description[i18n.language] || product.description.fr || '').toLowerCase();
-        const category = (product.category?.name[i18n.language] || product.category?.name.fr || '').toLowerCase();
+        
+        // Extraire le nom du produit de manière sécurisée
+        const productName = product?.name && typeof product.name === 'object'
+          ? (product.name?.[i18n.language] || product.name?.fr || '')
+          : (product.name || '');
+        
+        // Extraire la description du produit de manière sécurisée
+        const productDescription = product?.description && typeof product.description === 'object'
+          ? (product.description[i18n.language] || product.description.fr || '')
+          : (product.description || '');
+        
+        // Extraire le nom de la catégorie de manière sécurisée
+        const categoryName = product.category && typeof product.category.name === 'object' && product.category.name !== null
+          ? (product.category.name[i18n.language] || product.category.name.fr || '')
+          : (product.category?.name || '');
+        
+        const name = productName.toLowerCase();
+        const description = productDescription.toLowerCase();
+        const category = categoryName.toLowerCase();
         
         return name.includes(query) || description.includes(query) || category.includes(query);
       }).slice(0, 5) // Limiter à 5 résultats pour l'aperçu
@@ -142,13 +158,20 @@ export function Header() {
               {t('nav.categories')}
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              {(Array.isArray(state.categories) ? state.categories : []).map((category) => (
-                <DropdownMenuItem key={category.id}>
-                  <Link to={`/products/${category.slug}`}>
-                    {category.name[i18n.language] || category.name.fr}
-                  </Link>
-                </DropdownMenuItem>
-              ))}
+              {(Array.isArray(state.categories) ? state.categories : []).map((category) => {
+                // Vérifier que category.name est un objet et extraire la valeur appropriée
+                const categoryName = typeof category.name === 'object' && category.name !== null
+                  ? (category.name[i18n.language] || category.name.fr || 'Catégorie')
+                  : (category.name || 'Catégorie');
+                
+                return (
+                  <DropdownMenuItem key={category.id}>
+                    <Link to={`/products/${category.slug || category.id}`}>
+                      {categoryName}
+                    </Link>
+                  </DropdownMenuItem>
+                );
+              })}
             </DropdownMenuContent>
           </DropdownMenu>
           <Link
@@ -202,7 +225,9 @@ export function Header() {
                           {product.images && product.images[0] ? (
                             <img 
                               src={product.images[0]} 
-                              alt={product.name[i18n.language] || product.name.fr}
+                              alt={typeof product.name === 'object' && product.name !== null
+                                ? (product.name[i18n.language] || product.name.fr || 'Produit')
+                                : (product.name || 'Produit')}
                               className="w-full h-full object-cover rounded-md"
                             />
                           ) : (
@@ -211,10 +236,14 @@ export function Header() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="text-sm font-medium text-gray-900 truncate">
-                            {product.name[i18n.language] || product.name.fr}
+                            {product.name && typeof product.name === 'object'
+                              ? (product.name[i18n.language] || product.name.fr || 'Produit')
+                              : (product.name || 'Produit')}
                           </div>
                           <div className="text-xs text-gray-500 truncate">
-                            {product.category?.name[i18n.language] || product.category?.name.fr}
+                            {product.category && typeof product.category.name === 'object' && product.category.name !== null
+                              ? (product.category.name[i18n.language] || product.category.name.fr || 'Catégorie')
+                              : (product.category?.name || 'Catégorie')}
                           </div>
                         </div>
                         <div className="text-sm font-semibold text-emerald-600 ml-2">
@@ -284,49 +313,42 @@ export function Header() {
           <div className="flex-1 flex justify-end">
             {isAuthenticated ? (
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center hover:text-emerald-600 text-sm ml-4">
-                  <Avatar className="w-8 h-8 mr-2">
-                    <AvatarFallback className="text-sm">
-                      {user?.first_name.charAt(0)}{user?.last_name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span>{user?.first_name}</span>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <div className="flex items-center justify-start gap-2 p-2">
-                    <Avatar className="w-10 h-10">
-                      <AvatarFallback>
-                        {user?.first_name.charAt(0)}{user?.last_name.charAt(0)}
-                      </AvatarFallback>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.avatar} alt={user.first_name} />
+                      <AvatarFallback>{user.first_name.charAt(0)}</AvatarFallback>
                     </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        {user?.first_name} {user?.last_name}
-                      </p>
+                      <p className="text-sm font-medium leading-none">{user.first_name} {user.last_name}</p>
                       <p className="text-xs leading-none text-muted-foreground">
-                        {user?.email}
+                        {user.email}
                       </p>
                     </div>
-                  </div>
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to="/profile" className="flex items-center">
-                      <Settings className="mr-2 h-4 w-4" />
-                      Profile
+                    <Link to="/profile">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Mon profil</span>
                     </Link>
                   </DropdownMenuItem>
                   {isAdmin && (
                     <DropdownMenuItem asChild>
-                      <Link to="/admin" className="flex items-center">
-                        <Shield className="mr-2 h-4 w-4" />
-                        Admin Dashboard
+                      <Link to="/admin">
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Dashboard Admin</span>
                       </Link>
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={logout} className="text-red-600">
                     <LogOut className="mr-2 h-4 w-4" />
-                    Logout
+                    Se déconnecter
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

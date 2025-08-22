@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '@/contexts/useApp';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -17,11 +18,14 @@ import {
   Shield,
   CreditCard,
   Package,
+  Lock,
+  User,
 } from 'lucide-react';
 
 export function CartPage() {
   const { t, i18n } = useTranslation();
   const { state, updateCartQuantity, removeFromCart, getCartTotal, getCartItemsCount } = useApp();
+  const { isAuthenticated } = useAuth();
 
   const subtotal = getCartTotal();
   const shipping = subtotal >= 200 ? 0 : 25; // Free shipping over 200 MAD
@@ -272,12 +276,38 @@ const productName = product.name
                 </div>
               )}
 
-              <Link to="/checkout" className="block">
-                <Button size="lg" className="w-full bg-emerald-600 hover:bg-emerald-700">
-                  <CreditCard className="w-4 h-4 mr-2" />
-                  {t('cart.checkout')}
-                </Button>
-              </Link>
+              {/* Checkout button with authentication check */}
+              {isAuthenticated ? (
+                <Link to="/checkout" className="block">
+                  <Button size="lg" className="w-full bg-emerald-600 hover:bg-emerald-700">
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    {t('cart.checkout')}
+                  </Button>
+                </Link>
+              ) : (
+                <div className="space-y-3">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <Lock className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <h4 className="font-medium text-amber-800 mb-1">
+                          Connexion requise pour continuer
+                        </h4>
+                        <p className="text-sm text-amber-700">
+                          Vous devez vous connecter ou créer un compte pour procéder au paiement et finaliser votre commande.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Link to="/auth" className="block">
+                    <Button size="lg" className="w-full bg-amber-600 hover:bg-amber-700">
+                      <User className="w-4 h-4 mr-2" />
+                      Se connecter / Créer un compte
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </CardContent>
           </Card>
 

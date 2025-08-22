@@ -31,11 +31,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitchToRegis
     setIsLoading(true);
 
     try {
-      const success = await login(email, password);
-      if (success) {
+      const result = await login(email, password);
+      if (result.success) {
         onSuccess?.();
       } else {
-        setError(t('auth.invalidCredentials'));
+        setError(result.message || t('auth.invalidCredentials'));
       }
     } catch (err) {
       setError(t('auth.loginError'));

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Connexion API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { border: 1px solid #ccc; margin: 20px 0; padding: 15px; border-radius: 5px; }
+        .error { color: red; }
+        .success { color: green; }
+        .warning { color: orange; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Test Connexion API Laravel</h1>
+    
+    <div class="test-section">
+        <h3>1. Test de base de l'API</h3>
+        <button onclick="testBasicConnection()">Tester la connexion de base</button>
+        <div id="basic-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. Test de l'endpoint de connexion</h3>
+        <button onclick="testLoginEndpoint()">Tester l'endpoint de connexion</button>
+        <div id="login-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. Test avec les vraies données de connexion</h3>
+        <button onclick="testRealLogin()">Tester la vraie connexion</button>
+        <div id="real-login-result"></div>
+    </div>
+
+    <script>
+        async function testBasicConnection() {
+            const resultDiv = document.getElementById('basic-result');
+            resultDiv.innerHTML = 'Test en cours...';
+
+            try {
+                console.log('🔍 Test de connexion de base...');
+                
+                const response = await fetch('http://localhost:8000/api/v1/auth/test-auth');
+                console.log('📥 Réponse reçue:', response);
+                console.log('📊 Status:', response.status);
+                console.log('🔗 Headers:', response.headers);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ Connexion de base réussie:', data);
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ Connexion de base réussie !<br>
+                            <strong>Status:</strong> ${response.status}<br>
+                            <strong>Message:</strong> ${data.message}<br>
+                            <strong>Content-Type:</strong> ${response.headers.get('content-type')}
+                        </div>
+                    `;
+                } else {
+                    const errorText = await response.text();
+                    console.error('❌ Erreur de connexion de base:', errorText);
+                    
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ Erreur de connexion de base ${response.status}<br>
+                            <strong>Réponse:</strong><br>
+                            <pre>${errorText}</pre>
+                        </div>
+                    `;
+                }
+
+            } catch (error) {
+                console.error('❌ Erreur réseau:', error);
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erreur réseau: ${error.message}<br>
+                        <strong>Type:</strong> ${error.name}<br>
+                        <strong>Stack:</strong><br>
+                        <pre>${error.stack}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        async function testLoginEndpoint() {
+            const resultDiv = document.getElementById('login-result');
+            resultDiv.innerHTML = 'Test en cours...';
+
+            try {
+                console.log('🔍 Test de l\'endpoint de connexion...');
+                
+                // Test avec des données factices
+                const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'test@test.com',
+                        password: 'wrongpassword'
+                    })
+                });
+
+                console.log('📥 Réponse reçue:', response);
+                console.log('📊 Status:', response.status);
+
+                if (response.status === 422 || response.status === 401) {
+                    // C'est normal d'avoir une erreur avec des mauvaises données
+                    const errorData = await response.json();
+                    console.log('✅ Endpoint accessible (erreur attendue):', errorData);
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ Endpoint de connexion accessible !<br>
+                            <strong>Status:</strong> ${response.status}<br>
+                            <strong>Type d'erreur:</strong> ${errorData.message || 'Validation ou authentification'}
+                        </div>
+                    `;
+                } else if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ Connexion réussie (inattendu):', data);
+                    
+                    resultDiv.innerHTML = `
+                        <div class="warning">
+                            ⚠️ Connexion réussie avec de mauvaises données (inattendu)<br>
+                            <strong>Status:</strong> ${response.status}<br>
+                            <strong>Données:</strong><br>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    const errorText = await response.text();
+                    console.error('❌ Erreur inattendue:', errorText);
+                    
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ Erreur inattendue ${response.status}<br>
+                            <strong>Réponse:</strong><br>
+                            <pre>${errorText}</pre>
+                        </div>
+                    `;
+                }
+
+            } catch (error) {
+                console.error('❌ Erreur réseau:', error);
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erreur réseau: ${error.message}<br>
+                        <strong>Type:</strong> ${error.name}
+                    </div>
+                `;
+            }
+        }
+
+        async function testRealLogin() {
+            const resultDiv = document.getElementById('real-login-result');
+            resultDiv.innerHTML = 'Test en cours...';
+
+            try {
+                console.log('🔍 Test de la vraie connexion...');
+                
+                const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'achguarhoucine@gmail.com',
+                        password: 'N-xa2lah18'
+                    })
+                });
+
+                console.log('📥 Réponse reçue:', response);
+                console.log('📊 Status:', response.status);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ Vraie connexion réussie:', data);
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ Vraie connexion réussie !<br>
+                            <strong>Status:</strong> ${response.status}<br>
+                            <strong>Token:</strong> ${data.token ? data.token.substring(0, 30) + '...' : 'Aucun'}<br>
+                            <strong>Utilisateur:</strong> ${data.user?.name || 'N/A'}
+                        </div>
+                    `;
+                } else {
+                    const errorText = await response.text();
+                    console.error('❌ Erreur de vraie connexion:', errorText);
+                    
+                    let errorMessage = 'Erreur inconnue';
+                    try {
+                        const errorData = JSON.parse(errorText);
+                        errorMessage = errorData.message || errorData.error || errorMessage;
+                    } catch (parseError) {
+                        errorMessage = `Erreur ${response.status}: ${errorText}`;
+                    }
+                    
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ Erreur de vraie connexion<br>
+                            <strong>Status:</strong> ${response.status}<br>
+                            <strong>Message:</strong> ${errorMessage}<br>
+                            <strong>Réponse brute:</strong><br>
+                            <pre>${errorText}</pre>
+                        </div>
+                    `;
+                }
+
+            } catch (error) {
+                console.error('❌ Erreur réseau:', error);
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erreur réseau: ${error.message}<br>
+                        <strong>Type:</strong> ${error.name}
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

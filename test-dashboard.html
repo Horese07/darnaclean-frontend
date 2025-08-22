@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Dashboard Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { border: 1px solid #ccc; margin: 20px 0; padding: 15px; border-radius: 5px; }
+        .error { color: red; }
+        .success { color: green; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Test Dashboard Admin</h1>
+    
+    <div class="test-section">
+        <h3>Test API Produits</h3>
+        <button onclick="testProducts()">Tester l'API Produits</button>
+        <div id="products-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test API Catégories</h3>
+        <button onclick="testCategories()">Tester l'API Catégories</button>
+        <div id="categories-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test Structure des Données</h3>
+        <button onclick="testDataStructure()">Tester la Structure</button>
+        <div id="structure-result"></div>
+    </div>
+
+    <script>
+        async function testProducts() {
+            const resultDiv = document.getElementById('products-result');
+            resultDiv.innerHTML = 'Test en cours...';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/products');
+                const data = await response.json();
+
+                if (data.success) {
+                    const product = data.data[0];
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ API Produits fonctionne !<br>
+                            Nombre de produits: ${data.data.length}<br>
+                            Structure du premier produit:
+                        </div>
+                        <pre>${JSON.stringify(product, null, 2)}</pre>
+                        <div>
+                            <strong>Test des champs:</strong><br>
+                            - name_fr: ${product.name_fr || 'N/A'}<br>
+                            - name_en: ${product.name_en || 'N/A'}<br>
+                            - name_ar: ${product.name_ar || 'N/A'}<br>
+                            - category_id: ${product.category_id}<br>
+                            - stock: ${product.stock}<br>
+                            - is_active: ${product.is_active}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ Erreur API: ${data.message}<br>
+                            Status: ${response.status}
+                        </div>
+                    `;
+                }
+
+                console.log('Products Response:', data);
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erreur réseau: ${error.message}
+                    </div>
+                `;
+                console.error('Error:', error);
+            }
+        }
+
+        async function testCategories() {
+            const resultDiv = document.getElementById('categories-result');
+            resultDiv.innerHTML = 'Test en cours...';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/categories');
+                const data = await response.json();
+
+                if (data.success) {
+                    const category = data.data[0];
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ API Catégories fonctionne !<br>
+                            Nombre de catégories: ${data.data.length}<br>
+                            Structure de la première catégorie:
+                        </div>
+                        <pre>${JSON.stringify(category, null, 2)}</pre>
+                        <div>
+                            <strong>Test des champs:</strong><br>
+                            - name_fr: ${category.name_fr || 'N/A'}<br>
+                            - name_en: ${category.name_en || 'N/A'}<br>
+                            - name_ar: ${category.name_ar || 'N/A'}<br>
+                            - slug: ${category.slug}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ Erreur API: ${data.message}<br>
+                            Status: ${response.status}
+                        </div>
+                    `;
+                }
+
+                console.log('Categories Response:', data);
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erreur réseau: ${error.message}
+                    </div>
+                `;
+                console.error('Error:', error);
+            }
+        }
+
+        async function testDataStructure() {
+            const resultDiv = document.getElementById('structure-result');
+            resultDiv.innerHTML = 'Test en cours...';
+
+            try {
+                // Tester les produits
+                const productsResponse = await fetch('http://localhost:8000/api/v1/products');
+                const productsData = await productsResponse.json();
+                
+                // Tester les catégories
+                const categoriesResponse = await fetch('http://localhost:8000/api/v1/categories');
+                const categoriesData = await categoriesResponse.json();
+
+                if (productsData.success && categoriesData.success) {
+                    const product = productsData.data[0];
+                    const category = categoriesData.data[0];
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ Structure des données compatible !<br><br>
+                            <strong>Produit:</strong><br>
+                            - ID: ${product.id}<br>
+                            - Nom (FR): ${product.name_fr}<br>
+                            - Catégorie ID: ${product.category_id}<br>
+                            - Stock: ${product.stock}<br><br>
+                            
+                            <strong>Catégorie:</strong><br>
+                            - ID: ${category.id}<br>
+                            - Nom (FR): ${category.name_fr}<br>
+                            - Slug: ${category.slug}<br><br>
+                            
+                            <strong>Relation:</strong><br>
+                            - Produit.category_id (${product.category_id}) === Catégorie.id (${category.id}): ${product.category_id === category.id ? '✅' : '❌'}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ Erreur lors de la récupération des données
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erreur réseau: ${error.message}
+                    </div>
+                `;
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

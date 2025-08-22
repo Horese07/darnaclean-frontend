@@ -75,7 +75,7 @@ const [isWishlisted, setIsWishlisted] = useState(false);
             {product.images && product.images.length > 0 ? (
               <img
                 src={product.images[0]}
-                alt={product.name[i18n.language] || product.name.fr || t('products.unnamedProduct')}
+                alt={product.name?.[i18n.language] || product.name?.fr || t('products.unnamedProduct')}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 onError={(e) => {
                   e.currentTarget.src = `data:image/svg+xml,${encodeURIComponent(`
@@ -152,7 +152,7 @@ const [isWishlisted, setIsWishlisted] = useState(false);
 
               {/* Product name */}
               <h3 className="font-semibold text-gray-900 line-clamp-2 group-hover:text-emerald-600 transition-colors">
-                {product.name[i18n.language] || product.name.fr || t('products.unnamedProduct')}
+                {product.name?.[i18n.language] || product.name?.fr || t('products.unnamedProduct')}
               </h3>
 
               {/* Rating */}

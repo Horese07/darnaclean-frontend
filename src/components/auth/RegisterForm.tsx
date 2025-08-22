@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from '../ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { LanguageSwitcher } from '../ui/LanguageSwitcher';
+import { SocialLoginButtons } from './SocialLoginButtons';
 
 interface RegisterFormProps {
   onSuccess?: () => void;
@@ -33,7 +34,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchT
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const { register } = useAuth();
+  const { register, googleLogin, facebookLogin, appleLogin } = useAuth();
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -57,16 +58,64 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchT
     setIsLoading(true);
 
     try {
-      const success = await register(formData);
-      if (success) {
+      const result = await register(formData);
+      if (result.success) {
         onSuccess?.();
       } else {
-        setError(t('auth.registrationFailed'));
+        // Afficher les erreurs de validation du backend
+        if (result.errors && Object.keys(result.errors).length > 0) {
+          const errorMessages = Object.values(result.errors).flat();
+          setError(errorMessages.join(', '));
+        } else {
+          setError(result.message || t('auth.registrationFailed'));
+        }
       }
     } catch (err) {
       setError(t('auth.registrationError'));
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError('');
+    try {
+      const success = await googleLogin();
+      if (success) {
+        onSuccess?.();
+      } else {
+        setError(t('auth.googleLoginError'));
+      }
+    } catch (err) {
+      setError(t('auth.socialLoginError', { provider: 'Google' }));
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    setError('');
+    try {
+      const success = await facebookLogin();
+      if (success) {
+        onSuccess?.();
+      } else {
+        setError(t('auth.facebookLoginError'));
+      }
+    } catch (err) {
+      setError(t('auth.socialLoginError', { provider: 'Facebook' }));
+    }
+  };
+
+  const handleAppleLogin = async () => {
+    setError('');
+    try {
+      const success = await appleLogin();
+      if (success) {
+        onSuccess?.();
+      } else {
+        setError(t('auth.appleLoginError'));
+      }
+    } catch (err) {
+      setError(t('auth.socialLoginError', { provider: 'Apple' }));
     }
   };
 
@@ -262,6 +311,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitchT
               t('auth.register')
             )}
           </Button>
+
+          <SocialLoginButtons
+            onGoogleLogin={handleGoogleLogin}
+            onFacebookLogin={handleFacebookLogin}
+            onAppleLogin={handleAppleLogin}
+            isLoading={isLoading}
+          />
 
           {onSwitchToLogin && (
             <div className="text-center text-sm">

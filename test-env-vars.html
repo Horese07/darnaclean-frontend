@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Variables d'Environnement</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { border: 1px solid #ccc; margin: 20px 0; padding: 15px; border-radius: 5px; }
+        .error { color: red; }
+        .success { color: green; }
+        .warning { color: orange; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Test Variables d'Environnement Vite</h1>
+    
+    <div class="test-section">
+        <h3>Variables d'environnement disponibles :</h3>
+        <div id="env-vars"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test de l'API avec VITE_API_URL :</h3>
+        <button onclick="testAPIWithEnv()">Tester l'API</button>
+        <div id="api-result"></div>
+    </div>
+
+    <script>
+        // Afficher les variables d'environnement disponibles
+        const envVarsDiv = document.getElementById('env-vars');
+        
+        // Vite expose les variables d'environnement via import.meta.env
+        const envVars = {
+            'VITE_API_URL': import.meta.env.VITE_API_URL,
+            'VITE_APP_ENV': import.meta.env.VITE_APP_ENV,
+            'VITE_APP_DEBUG': import.meta.env.VITE_APP_DEBUG,
+            'MODE': import.meta.env.MODE,
+            'DEV': import.meta.env.DEV,
+            'PROD': import.meta.env.PROD
+        };
+        
+        let envHtml = '<h4>Variables détectées :</h4>';
+        for (const [key, value] of Object.entries(envVars)) {
+            if (value !== undefined) {
+                envHtml += `<div class="success"><strong>${key}:</strong> ${value}</div>`;
+            } else {
+                envHtml += `<div class="error"><strong>${key}:</strong> Non définie</div>`;
+            }
+        }
+        
+        envVarsDiv.innerHTML = envHtml;
+        
+        // Test de l'API avec la variable d'environnement
+        async function testAPIWithEnv() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.innerHTML = 'Test en cours...';
+            
+            const apiUrl = import.meta.env.VITE_API_URL;
+            
+            if (!apiUrl) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ VITE_API_URL n'est pas définie !<br>
+                        Vérifiez que le fichier .env existe et contient VITE_API_URL
+                    </div>
+                `;
+                return;
+            }
+            
+            try {
+                console.log('🔍 Test de l\'API avec VITE_API_URL:', apiUrl);
+                
+                const response = await fetch(`${apiUrl}/auth/test-auth`);
+                console.log('📥 Réponse reçue:', response);
+                console.log('📊 Status:', response.status);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ API accessible avec VITE_API_URL:', data);
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ API accessible avec VITE_API_URL !<br>
+                            <strong>URL utilisée:</strong> ${apiUrl}/auth/test-auth<br>
+                            <strong>Status:</strong> ${response.status}<br>
+                            <strong>Message:</strong> ${data.message}
+                        </div>
+                    `;
+                } else {
+                    const errorText = await response.text();
+                    console.error('❌ Erreur API:', errorText);
+                    
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ Erreur API ${response.status}<br>
+                            <strong>URL utilisée:</strong> ${apiUrl}/auth/test-auth<br>
+                            <strong>Réponse:</strong><br>
+                            <pre>${errorText}</pre>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('❌ Erreur réseau:', error);
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erreur réseau: ${error.message}<br>
+                        <strong>URL utilisée:</strong> ${apiUrl}/auth/test-auth<br>
+                        <strong>Type:</strong> ${error.name}
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

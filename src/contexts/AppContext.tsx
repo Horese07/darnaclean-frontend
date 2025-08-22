@@ -4,25 +4,33 @@ import { useTranslation } from 'react-i18next';
 // Types
 export interface Product {
   id: number;
-  name: string;
+  name: { fr: string; en: string; ar: string };
   slug: string;
-  description: string;
+  description: { fr: string; en: string; ar: string };
   price: number;
   originalPrice?: number;
   currency: string;
-  category: string;
-  subcategory: string;
-  brand: string;
-  sku: string;
+  category_id: number;
+  category?: {
+    id: number;
+    name: { fr: string; en: string; ar: string };
+    slug: string;
+  };
+  subcategory?: string;
+  brand?: string;
+  sku?: string;
   stock: number;
   images: string[];
-  featured: boolean;
-  onSale: boolean;
-  badges: string[];
-  specifications: any;
-  rating: number;
-  reviewCount: number;
-  tags: string[];
+  featured?: boolean;
+  onSale?: boolean;
+  badges?: string[];
+  specifications?: any;
+  rating?: number;
+  reviewCount?: number;
+  tags?: string[];
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Category {
@@ -78,6 +86,7 @@ interface AppState {
 type AppAction =
   | { type: 'SET_PRODUCTS'; payload: Product[] }
   | { type: 'SET_CATEGORIES'; payload: Category[] }
+  | { type: 'SET_CART'; payload: CartItem[] }
   | { type: 'ADD_TO_CART'; payload: { product: Product; quantity: number } }
   | { type: 'REMOVE_FROM_CART'; payload: number }
   | { type: 'UPDATE_CART_QUANTITY'; payload: { productId: number; quantity: number } }
@@ -88,6 +97,8 @@ type AppAction =
   | { type: 'SET_FILTERS'; payload: Partial<AppState['filters']> }
   | { type: 'SET_SORT_BY'; payload: AppState['sortBy'] }
   | { type: 'SET_HERO'; payload: { title: string; description: string; cta: string } };
+
+const CART_STORAGE_KEY = 'ecommerce-beauty-cart';
 
 const initialState: AppState = {
   products: [],
@@ -107,6 +118,9 @@ function appReducer(state: AppState, action: AppAction): AppState {
     
     case 'SET_CATEGORIES':
       return { ...state, categories: action.payload };
+    
+    case 'SET_CART':
+      return { ...state, cart: action.payload };
     
     case 'ADD_TO_CART': {
       const existingItem = state.cart.find(item => item.product.id === action.payload.product.id);
@@ -196,6 +210,31 @@ export const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const { i18n } = useTranslation();
+
+  // Charger le panier depuis le localStorage au démarrage
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(CART_STORAGE_KEY);
+      if (stored) {
+        const cartItems = JSON.parse(stored);
+        if (Array.isArray(cartItems)) {
+          // Initialiser directement l'état du panier au lieu d'utiliser ADD_TO_CART
+          dispatch({ type: 'SET_CART', payload: cartItems });
+        }
+      }
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error);
+    }
+  }, []);
+
+  // Sauvegarder le panier dans le localStorage à chaque modification
+  useEffect(() => {
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state.cart));
+    } catch (error) {
+      console.error('Error saving cart to localStorage:', error);
+    }
+  }, [state.cart]);
 
   // Authentification utilisateur
   const login = async (email: string, password: string) => {
@@ -352,13 +391,40 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       } else if (productsJson.data) {
         products = productsJson.data;
       }
-      // Correction : forcer le type number sur price et originalPrice, utiliser les champs localisés string name/description
+      // Correction : adapter la structure des produits pour la structure actuelle de l'API
       products = products.map((p: any) => ({
         ...p,
-        name: p.name,
-        description: p.description,
+        // Utiliser la structure actuelle (name_fr, name_en, name_ar) et créer un objet name pour compatibilité
+        name: {
+          fr: p.name_fr || p.name?.fr || p.name || '',
+          en: p.name_en || p.name?.en || p.name || '',
+          ar: p.name_ar || p.name?.ar || p.name || ''
+        },
+        description: {
+          fr: p.description_fr || p.description?.fr || p.description || '',
+          en: p.description_en || p.description?.en || p.description || '',
+          ar: p.description_ar || p.description?.ar || p.description || ''
+        },
         price: typeof p.price === 'string' ? parseFloat(p.price) : p.price,
         originalPrice: typeof p.original_price === 'string' ? parseFloat(p.original_price) : (typeof p.originalPrice === 'string' ? parseFloat(p.originalPrice) : (p.original_price ?? p.originalPrice)),
+        // S'assurer que category est un objet avec la bonne structure
+        category: p.category ? {
+          id: p.category.id || p.category_id,
+          name: {
+            fr: p.category.name_fr || p.category.name?.fr || p.category.name || '',
+            en: p.category.name_en || p.category.name?.en || p.category.name || '',
+            ar: p.category.name_ar || p.category.name?.ar || p.category.name || ''
+          },
+          slug: p.category.slug || ''
+        } : undefined,
+        // Valeurs par défaut pour les champs optionnels
+        featured: p.featured || false,
+        onSale: p.on_sale || p.onSale || false,
+        badges: p.badges || [],
+        rating: p.rating || 0,
+        reviewCount: p.review_count || p.reviewCount || 0,
+        tags: p.tags || [],
+        is_active: p.is_active !== undefined ? p.is_active : true
       }));
       console.log('[LOAD DATA] Products loaded:', products);
       dispatch({ type: 'SET_PRODUCTS', payload: products });
@@ -517,11 +583,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     // Apply filters
     if (state.filters.category) {
-      filtered = filtered.filter(product => product.category?.slug === state.filters.category);
+      filtered = filtered.filter(product => product.category?.name?.fr === state.filters.category || product.category?.name?.en === state.filters.category || product.category?.name?.ar === state.filters.category);
     }
 
     if (state.filters.subcategory) {
-      filtered = filtered.filter(product => product.subcategory?.slug === state.filters.subcategory);
+      filtered = filtered.filter(product => product.subcategory === state.filters.subcategory);
     }
 
     if (state.filters.brand) {
@@ -550,7 +616,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         filtered.sort((a, b) => b.price - a.price);
         break;
       case 'name':
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        filtered.sort((a, b) => a.name.fr.localeCompare(b.name.fr));
         break;
       case 'rating':
         filtered.sort((a, b) => b.rating - a.rating);

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Authentification Sanctum</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { border: 1px solid #ccc; margin: 20px 0; padding: 15px; border-radius: 5px; }
+        .error { color: red; }
+        .success { color: green; }
+        .warning { color: orange; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .debug-info { background: #fff3cd; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        input { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 3px; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Test Authentification Sanctum</h1>
+    
+    <div class="test-section">
+        <h3>1. Test Route Publique</h3>
+        <button onclick="testPublicRoute()">Tester Route Publique</button>
+        <div id="public-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. Connexion</h3>
+        <label>Email:</label>
+        <input type="email" id="email" value="admin@darnaclean.ma" />
+        <label>Mot de passe:</label>
+        <input type="password" id="password" value="password123" />
+        <button onclick="login()">Se connecter</button>
+        <div id="login-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. Test Route Protégée</h3>
+        <button onclick="testProtectedRoute()">Tester Route Protégée</button>
+        <div id="protected-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>4. Test Mise à Jour Produit</h3>
+        <button onclick="testUpdateProduct()">Tester Mise à Jour Produit</button>
+        <div id="update-result"></div>
+    </div>
+
+    <script>
+        let authToken = null;
+
+        async function testPublicRoute() {
+            const resultDiv = document.getElementById('public-result');
+            resultDiv.innerHTML = 'Test en cours...';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/auth/test-auth');
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        ✅ Route publique accessible !<br>
+                        <strong>Status:</strong> ${response.status}<br>
+                        <strong>Message:</strong> ${data.message}
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erreur: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function login() {
+            const resultDiv = document.getElementById('login-result');
+            resultDiv.innerHTML = 'Connexion en cours...';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    authToken = data.token;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ Connexion réussie !<br>
+                            <strong>Token:</strong> ${authToken ? authToken.substring(0, 20) + '...' : 'Aucun'}
+                        </div>
+                    `;
+                } else {
+                    const errorData = await response.json();
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ Erreur de connexion: ${errorData.message}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erreur réseau: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function testProtectedRoute() {
+            if (!authToken) {
+                document.getElementById('protected-result').innerHTML = `
+                    <div class="warning">
+                        ⚠️ Veuillez d'abord vous connecter
+                    </div>
+                `;
+                return;
+            }
+
+            const resultDiv = document.getElementById('protected-result');
+            resultDiv.innerHTML = 'Test en cours...';
+
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/auth/test-protected', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ Route protégée accessible !<br>
+                            <strong>Status:</strong> ${response.status}<br>
+                            <strong>Message:</strong> ${data.message}<br>
+                            <strong>Utilisateur:</strong> ${data.user.name} (${data.user.email})
+                        </div>
+                    `;
+                } else {
+                    const errorText = await response.text();
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ Erreur ${response.status}<br>
+                            <strong>Réponse:</strong><br>
+                            <pre>${errorText}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erreur réseau: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function testUpdateProduct() {
+            if (!authToken) {
+                document.getElementById('update-result').innerHTML = `
+                    <div class="warning">
+                        ⚠️ Veuillez d'abord vous connecter
+                    </div>
+                `;
+                return;
+            }
+
+            const resultDiv = document.getElementById('update-result');
+            resultDiv.innerHTML = 'Test en cours...';
+
+            try {
+                // D'abord récupérer un produit
+                const productsResponse = await fetch('http://localhost:8000/api/v1/products');
+                if (!productsResponse.ok) {
+                    throw new Error('Impossible de récupérer les produits');
+                }
+
+                const productsData = await productsResponse.json();
+                if (!productsData.data || productsData.data.length === 0) {
+                    throw new Error('Aucun produit trouvé');
+                }
+
+                const product = productsData.data[0];
+                console.log('🔍 Produit à modifier:', product);
+
+                // Tenter de le modifier
+                const updateResponse = await fetch(`http://localhost:8000/api/v1/products/${product.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: {
+                            fr: product.name_fr + ' (modifié)',
+                            en: product.name_en + ' (modified)',
+                            ar: product.name_ar + ' (معدل)'
+                        },
+                        description: {
+                            fr: product.description_fr + ' (modifié)',
+                            en: product.description_en + ' (modified)',
+                            ar: product.description_ar + ' (معدل)'
+                        },
+                        price: parseFloat(product.price) + 1,
+                        stock: product.stock + 1,
+                        category_id: product.category_id,
+                        currency: 'MAD',
+                        is_active: true
+                    })
+                });
+
+                console.log('📥 Réponse mise à jour:', updateResponse);
+                console.log('📊 Status:', updateResponse.status);
+
+                if (updateResponse.ok) {
+                    const updateData = await updateResponse.json();
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ Produit mis à jour avec succès !<br>
+                            <strong>Status:</strong> ${updateResponse.status}<br>
+                            <strong>Message:</strong> ${updateData.message}
+                        </div>
+                    `;
+                } else {
+                    const errorText = await updateResponse.text();
+                    console.error('❌ Erreur de mise à jour:', errorText);
+                    
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ❌ Erreur lors de la mise à jour<br>
+                            <strong>Status:</strong> ${updateResponse.status}<br>
+                            <strong>Réponse:</strong><br>
+                            <pre>${errorText}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('❌ Erreur:', error);
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        ❌ Erreur: ${error.message}
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

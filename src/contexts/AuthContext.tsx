@@ -20,8 +20,8 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isAdmin: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  register: (userData: RegisterData) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<{ success: boolean; message?: string; errors?: any }>;
+  register: (userData: RegisterData) => Promise<{ success: boolean; message?: string; errors?: any }>;
   logout: () => void;
   updateProfile: (userData: Partial<User>) => Promise<boolean>;
   changePassword: (currentPassword: string, newPassword: string) => Promise<boolean>;
@@ -110,7 +110,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; message?: string; errors?: any }> => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
@@ -127,18 +127,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(userData);
         setToken(authToken);
         localStorage.setItem('auth_token', authToken);
-        return true;
+        return { success: true };
       } else {
         console.error('Login failed:', data.message);
-        return false;
+        return { success: false, message: data.message || 'Login failed' };
       }
     } catch (error) {
       console.error('Login error:', error);
-      return false;
+      return { success: false, message: 'Network error occurred' };
     }
   };
 
-  const register = async (userData: RegisterData): Promise<boolean> => {
+  const register = async (userData: RegisterData): Promise<{ success: boolean; message?: string; errors?: any }> => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
@@ -155,14 +155,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(newUser);
         setToken(authToken);
         localStorage.setItem('auth_token', authToken);
-        return true;
+        return { success: true };
       } else {
         console.error('Registration failed:', data.message);
-        return false;
+        return { 
+          success: false, 
+          message: data.message || 'Registration failed',
+          errors: data.errors || {}
+        };
       }
     } catch (error) {
       console.error('Registration error:', error);
-      return false;
+      return { success: false, message: 'Network error occurred' };
     }
   };
 
