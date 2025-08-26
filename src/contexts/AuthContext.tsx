@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import SocialAuthService from '../services/socialAuth';
 
 interface User {
@@ -59,7 +59,7 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api/v1';
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -69,23 +69,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const isAuthenticated = !!token && !!user;
   const isAdmin = user?.is_admin || false;
 
-  useEffect(() => {
-    const initializeAuth = async () => {
-      if (token) {
-        try {
-          await fetchUserProfile();
-        } catch (error) {
-          console.error('Failed to fetch user profile:', error);
-          logout();
-        }
-      }
-      setIsLoading(false);
-    };
-
-    initializeAuth();
-  }, []);
-
-  const fetchUserProfile = async () => {
+  const fetchUserProfile = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/profile`, {
         headers: {
@@ -108,7 +92,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error('Error fetching user profile:', error);
       throw error;
     }
-  };
+  }, [token, API_BASE_URL]);
+
+  useEffect(() => {
+    const initializeAuth = async () => {
+      if (token) {
+        try {
+          console.log('Auth: Tentative de vérification du profil...');
+          await fetchUserProfile();
+          console.log('Auth: Profil chargé avec succès');
+        } catch (error) {
+          console.error('Auth: Erreur lors du chargement du profil:', error);
+          // Ne pas déconnecter automatiquement, juste logger l'erreur
+          console.log('Auth: Utilisateur reste connecté malgré l\'erreur de profil');
+        }
+      }
+      setIsLoading(false);
+    };
+
+    initializeAuth();
+  }, [token, fetchUserProfile]);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; message?: string; errors?: any }> => {
     try {

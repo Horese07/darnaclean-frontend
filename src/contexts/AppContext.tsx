@@ -117,6 +117,9 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return { ...state, products: action.payload };
     
     case 'SET_CATEGORIES':
+      console.log('[REDUCER] SET_CATEGORIES action received with payload:', action.payload);
+      console.log('[REDUCER] Payload type:', typeof action.payload);
+      console.log('[REDUCER] Payload is array:', Array.isArray(action.payload));
       return { ...state, categories: action.payload };
     
     case 'SET_CART':
@@ -238,7 +241,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   // Authentification utilisateur
   const login = async (email: string, password: string) => {
-    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+    const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
     console.log('[LOGIN] Attempting login with:', email);
     const res = await fetch(`${apiBase}/auth/login`, {
       method: 'POST',
@@ -259,7 +262,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const register = async (registerData: any) => {
-    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+    const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
     console.log('[REGISTER] Attempting register with:', registerData);
     const res = await fetch(`${apiBase}/auth/register`, {
       method: 'POST',
@@ -282,7 +285,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     const token = localStorage.getItem('darnaclean-token');
     if (token) {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+      const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
       console.log('[LOGOUT] Logging out user');
       await fetch(`${apiBase}/auth/logout`, {
         method: 'POST',
@@ -295,7 +298,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   // Authentification admin (exemple, à adapter selon votre API)
   const adminLogin = async (email: string, password: string) => {
-    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+    const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
     console.log('[ADMIN LOGIN] Attempting admin login with:', email);
     const res = await fetch(`${apiBase}/auth/login`, {
       method: 'POST',
@@ -326,6 +329,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const token = localStorage.getItem('darnaclean-token');
       if (!token) return;
       try {
+        console.log('App: Tentative de synchronisation du panier...');
         const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
         const res = await fetch(`${apiBase}/cart`, {
           headers: { 'Authorization': `Bearer ${token}` }
@@ -337,9 +341,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
               dispatch({ type: 'ADD_TO_CART', payload: item });
             });
           }
+          console.log('App: Panier synchronisé avec succès');
         }
       } catch (error) {
-        console.error('Erreur lors du chargement du panier backend:', error);
+        console.error('App: Erreur lors du chargement du panier backend:', error);
+        console.log('App: Utilisateur reste connecté malgré l\'erreur de panier');
       }
     };
     fetchCart();
@@ -450,6 +456,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         categories = categoriesJson.data;
       }
       console.log('[LOAD DATA] Categories loaded:', categories);
+      console.log('[LOAD DATA] Categories count:', categories.length);
+      console.log('[LOAD DATA] First category:', categories[0]);
       dispatch({ type: 'SET_CATEGORIES', payload: categories });
 
       // Charger l'utilisateur connecté si token présent
@@ -487,7 +495,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     // Optionnel: synchroniser immédiatement côté backend
     const token = localStorage.getItem('darnaclean-token');
     if (token) {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+      const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
       await fetch(`${apiBase}/cart/add`, {
         method: 'POST',
         headers: {
@@ -503,7 +511,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     dispatch({ type: 'REMOVE_FROM_CART', payload: productId });
     const token = localStorage.getItem('darnaclean-token');
     if (token) {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+      const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
       await fetch(`${apiBase}/cart/remove`, {
         method: 'POST',
         headers: {
@@ -522,7 +530,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: 'UPDATE_CART_QUANTITY', payload: { productId, quantity } });
       const token = localStorage.getItem('darnaclean-token');
       if (token) {
-        const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+        const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
         await fetch(`${apiBase}/cart/update`, {
           method: 'POST',
           headers: {
@@ -539,7 +547,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     dispatch({ type: 'CLEAR_CART' });
     const token = localStorage.getItem('darnaclean-token');
     if (token) {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+      const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
       await fetch(`${apiBase}/cart/clear`, {
         method: 'POST',
         headers: {
@@ -553,7 +561,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const createOrder = async (orderData: any) => {
     const token = localStorage.getItem('darnaclean-token');
     if (!token) throw new Error('Utilisateur non connecté');
-    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+    const apiBase = import.meta.env.VITE_API_URL || '/api/v1';
     const res = await fetch(`${apiBase}/orders`, {
       method: 'POST',
       headers: {

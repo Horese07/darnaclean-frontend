@@ -9,5 +9,11 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // Proxy désactivé temporairement - utilisation d'URLs absolues
+  // server: {
+  //   proxy: {
+  //     '/api': 'http://127.0.0.1:8000',
+  //   },
+  // },
 })
 

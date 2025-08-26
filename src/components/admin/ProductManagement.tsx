@@ -131,7 +131,7 @@ export function ProductManagement() {
   });
 
   // API base URL
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api/v1';
 
   // Charger les produits depuis l'API
   const loadProducts = async () => {
@@ -249,7 +249,7 @@ export function ProductManagement() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('auth_token') || localStorage.getItem('darnaclean-token')}`
         },
         body: JSON.stringify({
           ...formData,
@@ -289,20 +289,41 @@ export function ProductManagement() {
       };
 
       console.log('🔍 Données à envoyer pour la mise à jour:', updateData);
-      console.log('🔑 Token d\'authentification:', localStorage.getItem('token'));
+      
+      // Vérifier tous les tokens possibles
+      const authToken = localStorage.getItem('auth_token');
+      const darnacleanToken = localStorage.getItem('darnaclean-token');
+      const token = authToken || darnacleanToken;
+      
+      console.log('🔑 Token auth_token:', authToken);
+      console.log('🔑 Token darnaclean-token:', darnacleanToken);
+      console.log('🔑 Token final utilisé:', token);
+      console.log('🔑 Token existe:', !!token);
+      console.log('🔑 Longueur du token:', token ? token.length : 0);
 
-      const response = await fetch(`${API_BASE_URL}/products/${editingProduct.id}`, {
+      if (!token) {
+        alert('❌ Aucun token d\'authentification trouvé. Veuillez vous reconnecter.');
+        return;
+      }
+
+      const url = `${API_BASE_URL}/products/${editingProduct.id}`;
+      console.log('🌐 URL de la requête:', url);
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      };
+      console.log('📋 Headers envoyés:', headers);
+
+      const response = await fetch(url, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
+        headers: headers,
         body: JSON.stringify(updateData)
       });
 
       console.log('📥 Réponse reçue:', response);
       console.log('📊 Status:', response.status);
-      console.log('🔗 Headers:', response.headers);
+      console.log('🔗 Headers de réponse:', response.headers);
 
       if (response.ok) {
         const updatedProduct = await response.json();
@@ -331,6 +352,9 @@ export function ProductManagement() {
       }
     } catch (error) {
       console.error('❌ Erreur lors de la mise à jour:', error);
+      console.error('❌ Type d\'erreur:', error.constructor.name);
+      console.error('❌ Message d\'erreur:', error.message);
+      console.error('❌ Stack trace:', error.stack);
       alert(`Erreur lors de la mise à jour du produit: ${error.message}`);
     }
   };
@@ -343,7 +367,7 @@ export function ProductManagement() {
       const response = await fetch(`${API_BASE_URL}/products/${deletingProduct.id}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('auth_token') || localStorage.getItem('darnaclean-token')}`
         }
       });
 

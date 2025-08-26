@@ -26,6 +26,17 @@ export function Header() {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const [cartItemCount, setCartItemCount] = useState(0);
 
+  // Debug categories state
+  useEffect(() => {
+    console.log('Header: Categories state:', state.categories);
+    console.log('Header: Categories type:', typeof state.categories);
+    console.log('Header: Categories is array:', Array.isArray(state.categories));
+    if (Array.isArray(state.categories)) {
+      console.log('Header: Categories count:', state.categories.length);
+      console.log('Header: First category:', state.categories[0]);
+    }
+  }, [state.categories]);
+
   // Mettre à jour le nombre d'articles du panier avec animation
   useEffect(() => {
     const currentCount = getCartItemsCount();

@@ -56,7 +56,8 @@ export function HomePage() {
 
   useEffect(() => {
     setLoadingHero(true);
-    fetch(`http://localhost:8000/api/hero?lang=${i18n.language}`)
+    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+    fetch(`${apiBase}/hero?lang=${i18n.language}`)
       .then(res => res.json())
       .then(data => {
         if (dispatch) dispatch({ type: 'SET_HERO', payload: data });
@@ -68,7 +69,8 @@ export function HomePage() {
   // Fetch testimonials when language changes
   useEffect(() => {
     setLoadingTestimonials(true);
-    fetch(`http://localhost:8000/api/reviews?lang=${i18n.language}`)
+    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+    fetch(`${apiBase}/reviews?lang=${i18n.language}`)
       .then(res => res.json())
       .then(data => setTestimonials(Array.isArray(data) ? data : []))
       .catch(() => setTestimonials([]))
