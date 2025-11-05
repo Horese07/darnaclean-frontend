@@ -272,6 +272,6 @@ Le code est structuré pour faciliter l'intégration avec une API REST :
 
 DarnaClean.ma est un site e-commerce moderne, complet et prêt pour la production. Il offre une expérience utilisateur exceptionnelle avec toutes les fonctionnalités attendues d'une plateforme e-commerce professionnelle, optimisée pour le marché marocain.
 
-**🌐 Site en ligne** : [https://rpxo5qqc0b.space.minimax.io](https://rpxo5qqc0b.space.minimax.io)
+
 
 *Développé avec ❤️ pour le marché marocain*
